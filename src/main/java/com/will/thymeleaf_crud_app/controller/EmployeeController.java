@@ -2,7 +2,9 @@ package com.will.thymeleaf_crud_app.controller;
 
 import com.will.thymeleaf_crud_app.model.Employee;
 import com.will.thymeleaf_crud_app.service.EmployeeService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +20,7 @@ public class EmployeeController {
 
   @GetMapping("/")
   public String viewHomePage(Model model){
-    model.addAttribute("listEmployees", employeeService.getAllEmployees());
-    return "index";
+    return findPaginated(1, model);
   }
 
   @GetMapping("/showNewEmployeeForm")
@@ -50,6 +51,21 @@ public class EmployeeController {
   public String deleteEmployeeById(@PathVariable (value = "id") long id) {
     employeeService.deleteEmployeeById(id);
     return "redirect:/";
+  }
+
+  @GetMapping("/page/{pageNo}")
+  public String findPaginated(@PathVariable (value = "pageNo") int pageNo, Model model){
+    int pageSize = 5;
+
+    Page<Employee> page = employeeService.findPaginated(pageNo, pageSize);
+    List<Employee> listEmployees = page.getContent();
+
+    model.addAttribute("currentPage", pageNo);
+    model.addAttribute("totalPages", page.getTotalPages());
+    model.addAttribute("totalItems", page.getTotalElements());
+    model.addAttribute("listEmployees", listEmployees);
+
+    return "index";
   }
 
 }
