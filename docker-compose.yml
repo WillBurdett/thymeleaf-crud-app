@@ -11,7 +11,7 @@ services:
     volumes:
       - data:/data
   thymeleaf-crud-app:
-    image: thymeleaf-crud-app:latest
+    image: willburdett/thymeleaf-crud-app:v1
     container_name: thymeleaf-crud-app
     ports:
       - "8080:8080"
