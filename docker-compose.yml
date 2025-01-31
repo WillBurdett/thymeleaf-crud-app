@@ -5,10 +5,22 @@ services:
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=thymeleaf
+      - POSTGRES_DB=employeedb
     ports:
       - "5432:5432"
     volumes:
       - data:/data
+  thymeleaf-crud-app:
+    image: thymeleaf-crud-app:latest
+    container_name: thymeleaf-crud-app
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - postgresdb
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:5432/employeedb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
 volumes:
   data: {}
